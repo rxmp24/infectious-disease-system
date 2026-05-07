@@ -11,14 +11,14 @@ export class DiagnosticsService {
   constructor(
     private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   async predictSymptoms(features: number[], sessionUuid: string) {
     try {
       const response = await firstValueFrom(
         this.httpService.post(`${this.FASTAPI_URL}/predict/symptoms`, { features })
       );
-      
+
       const data = response.data;
 
       // Save history
@@ -55,7 +55,7 @@ export class DiagnosticsService {
           },
         })
       );
-      
+
       const data = response.data;
 
       // Save history

@@ -52,10 +52,7 @@ const getSymptomNames = (featuresStr: string) => {
 };
 
 const getApiUrl = () => {
-  if (typeof window !== 'undefined') {
-    return `http://${window.location.hostname}:3001`;
-  }
-  return 'http://127.0.0.1:3001';
+  return process.env.NEXT_PUBLIC_API_URL || 'https://infectious-disease-api.onrender.com';
 };
 
 export default function Dashboard() {

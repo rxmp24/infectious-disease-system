@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class DiagnosticsService {
-  private readonly FASTAPI_URL = 'http://localhost:8000';
+  private readonly FASTAPI_URL = process.env.ML_SERVICE_URL || 'https://infectious-disease-ml.onrender.com';
 
   constructor(
     private readonly httpService: HttpService,

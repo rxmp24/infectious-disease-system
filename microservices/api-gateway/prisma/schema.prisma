@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model PredictionHistory {
+  id          String   @id @default(uuid())
+  sessionUuid String
+  type        String   // 'SYMPTOM' or 'BLOOD_SMEAR'
+  inputs      String   // Stringified JSON or Filename
+  diagnosis   String
+  confidence  Float
+  createdAt   DateTime @default(now())
+}

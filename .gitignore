@@ -1,0 +1,21 @@
+# Python environments
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# IDEs
+.vscode/
+
+# Datasets (DO NOT UPLOAD THE HUGE IMAGE FOLDER TO GITHUB)
+malaria_cell_images/
+*.csv
+
+# Models (Optional: sometimes models are too big for Git, but your ONNX is 13MB so it's okay if you want to keep it. We will ignore them by default just in case)
+# *.pkl
+# *.onnx
+
+# Node/Frontend
+node_modules/
+.next/
+dist/

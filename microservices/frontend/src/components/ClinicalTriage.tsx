@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, X, Activity, RotateCcw } from 'lucide-react';
+import { ChevronDown, X, Activity, RotateCcw, Loader2 } from 'lucide-react';
 
 const BOX_1_OPTIONS = [
   "High Fever", "Chills", "Fatigue", "Malaise", "Headache", 
@@ -23,6 +23,7 @@ interface ClinicalTriageProps {
   handlePredictSymptoms: () => void;
   triageResult: { disease: string; confidence: number } | null;
   clearTriage: () => void;
+  isLoading: boolean;
 }
 
 function MultiSelectDropdown({ 
@@ -115,7 +116,8 @@ export default function ClinicalTriage({
   removeSymptom,
   handlePredictSymptoms, 
   triageResult,
-  clearTriage 
+  clearTriage,
+  isLoading
 }: ClinicalTriageProps) {
 
   const box1Selected = selectedSymptoms.filter(s => BOX_1_OPTIONS.includes(s));
@@ -151,11 +153,20 @@ export default function ClinicalTriage({
         <div className="flex flex-col sm:flex-row gap-4 mt-6">
           <button 
             onClick={handlePredictSymptoms}
-            disabled={selectedSymptoms.length === 0}
+            disabled={selectedSymptoms.length === 0 || isLoading}
             className="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:bg-blue-300 dark:disabled:bg-blue-900 dark:disabled:text-blue-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl shadow-sm shadow-blue-200 dark:shadow-none transition-all active:scale-[0.98] flex items-center justify-center gap-2"
           >
-            <Activity className="w-5 h-5" />
-            Run Triage Prediction
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spinner" />
+                Analyzing Symptoms...
+              </>
+            ) : (
+              <>
+                <Activity className="w-5 h-5" />
+                Run Triage Prediction
+              </>
+            )}
           </button>
 
           {(selectedSymptoms.length > 0 || triageResult) && (
@@ -170,7 +181,22 @@ export default function ClinicalTriage({
         </div>
       </div>
 
-      {triageResult && (
+      {isLoading && (
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 animate-fade-in transition-colors">
+          <div className="flex flex-col items-center justify-center gap-5">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full border-4 border-blue-100 dark:border-blue-900/50"></div>
+              <div className="absolute top-0 left-0 w-16 h-16 rounded-full border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 animate-spinner"></div>
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Processing Triage</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 animate-pulse-slow">Analyzing symptom patterns with AI model...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {triageResult && !isLoading && (
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 animate-fade-in relative overflow-hidden transition-colors">
           <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
           

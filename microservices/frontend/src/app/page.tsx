@@ -107,6 +107,10 @@ export default function Dashboard() {
   const [preview, setPreview] = useState<string | null>(null);
   const [analysisResult, setAnalysisResult] = useState<{ result: string; confidence: number } | null>(null);
 
+  // Loading States
+  const [isTriageLoading, setIsTriageLoading] = useState(false);
+  const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
+
   const toggleSymptom = (symptom: string) => {
     setSelectedSymptoms((prev) =>
       prev.includes(symptom) ? prev.filter((s) => s !== symptom) : [...prev, symptom]
@@ -121,6 +125,7 @@ export default function Dashboard() {
     const mappedSelected = selectedSymptoms.map(s => SYMPTOM_MAP[s]);
     const features = MODEL_FEATURES_ORDER.map(feature => mappedSelected.includes(feature) ? 1 : 0);
 
+    setIsTriageLoading(true);
     try {
       const res = await fetch(`${getApiUrl()}/api/diagnostics/symptoms`, {
         method: 'POST',
@@ -136,6 +141,8 @@ export default function Dashboard() {
     } catch (e) {
       console.error(e);
       alert('Error predicting symptoms');
+    } finally {
+      setIsTriageLoading(false);
     }
   };
 
@@ -164,6 +171,7 @@ export default function Dashboard() {
     const formData = new FormData();
     formData.append('file', file);
 
+    setIsAnalysisLoading(true);
     try {
       const res = await fetch(`${getApiUrl()}/api/diagnostics/blood-smear`, {
         method: 'POST',
@@ -178,6 +186,8 @@ export default function Dashboard() {
     } catch (e) {
       console.error(e);
       alert('Error diagnosing smear');
+    } finally {
+      setIsAnalysisLoading(false);
     }
   };
 
@@ -230,6 +240,7 @@ export default function Dashboard() {
             handlePredictSymptoms={handlePredictSymptoms}
             triageResult={triageResult}
             clearTriage={clearTriage}
+            isLoading={isTriageLoading}
           />
         )}
 
@@ -241,6 +252,7 @@ export default function Dashboard() {
             handleAnalyzeSmear={handleAnalyzeSmear}
             analysisResult={analysisResult}
             clearSession={clearSession}
+            isLoading={isAnalysisLoading}
           />
         )}
 

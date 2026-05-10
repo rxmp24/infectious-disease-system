@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { UploadCloud, Microscope, Trash2, AlertCircle, Camera, X } from 'lucide-react';
+import { UploadCloud, Microscope, Trash2, AlertCircle, Camera, X, Loader2 } from 'lucide-react';
 
 interface LaboratoryAnalysisProps {
   file: File | null;
@@ -8,6 +8,7 @@ interface LaboratoryAnalysisProps {
   handleAnalyzeSmear: () => void;
   analysisResult: { result: string; confidence: number } | null;
   clearSession: () => void;
+  isLoading: boolean;
 }
 
 export default function LaboratoryAnalysis({
@@ -16,7 +17,8 @@ export default function LaboratoryAnalysis({
   handleFileChange,
   handleAnalyzeSmear,
   analysisResult,
-  clearSession
+  clearSession,
+  isLoading
 }: LaboratoryAnalysisProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -202,16 +204,40 @@ export default function LaboratoryAnalysis({
           </button>
           <button 
             onClick={handleAnalyzeSmear} 
-            disabled={!file}
+            disabled={!file || isLoading}
             className="flex-[2] bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 disabled:bg-emerald-300 dark:disabled:bg-emerald-900 dark:disabled:text-emerald-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl shadow-sm shadow-emerald-200 dark:shadow-none transition-all active:scale-[0.98] flex items-center justify-center gap-2"
           >
-            <Microscope className="w-5 h-5" />
-            Analyze Blood Smear
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spinner" />
+                Analyzing Smear...
+              </>
+            ) : (
+              <>
+                <Microscope className="w-5 h-5" />
+                Analyze Blood Smear
+              </>
+            )}
           </button>
         </div>
       </div>
 
-      {analysisResult && (
+      {isLoading && (
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 mb-8 animate-fade-in transition-colors">
+          <div className="flex flex-col items-center justify-center gap-5">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full border-4 border-emerald-100 dark:border-emerald-900/50"></div>
+              <div className="absolute top-0 left-0 w-16 h-16 rounded-full border-4 border-transparent border-t-emerald-600 dark:border-t-emerald-400 animate-spinner"></div>
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Analyzing Blood Smear</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 animate-pulse-slow">Running CNN deep-learning inference on slide image...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {analysisResult && !isLoading && (
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 animate-fade-in relative overflow-hidden transition-colors">
           <div className={`absolute top-0 left-0 w-1 h-full ${isMalaria ? 'bg-red-500' : 'bg-emerald-500'}`}></div>
           

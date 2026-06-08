@@ -35,13 +35,7 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-sm font-semibold mb-6 border border-blue-200 dark:border-blue-800">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                Live System Active
-              </div>
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-6">
                 Intelligent Infectious Disease Prediction &amp; Classification System.
               </h1>
@@ -82,7 +76,7 @@ export default function LandingPage() {
                         <Beaker className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">Parasitaemia</p>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">Malaria</p>
                         <p className="text-xs text-slate-500">Confidence: 98.4%</p>
                       </div>
                     </div>

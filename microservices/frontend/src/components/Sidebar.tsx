@@ -1,6 +1,7 @@
 import { Activity, Microscope, History, ShieldAlert, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface SidebarProps {
   activeTab: string;
@@ -24,7 +25,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   return (
     <aside className="w-72 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col h-full flex-shrink-0 transition-colors">
       <div className="p-6 pb-2">
-        <div className="flex items-center gap-3 mb-8">
+        <Link href="/" className="flex items-center gap-3 mb-8 hover:opacity-80 transition-opacity cursor-pointer">
           <div className="bg-blue-600 p-2 rounded-lg">
             <ShieldAlert className="text-white w-6 h-6" />
           </div>
@@ -32,7 +33,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
             <h1 className="text-sm font-bold text-gray-900 dark:text-white leading-tight transition-colors">Infectious Disease</h1>
             <p className="text-xs text-gray-500 dark:text-gray-400 font-medium transition-colors">Diagnostic System</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <nav className="flex-1 px-4 space-y-2">

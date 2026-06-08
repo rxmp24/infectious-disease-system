@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSessionUuid } from "./hooks/useSessionUuid";
-import Sidebar from "../components/Sidebar";
-import ClinicalTriage from "../components/ClinicalTriage";
-import LaboratoryAnalysis from "../components/LaboratoryAnalysis";
-import PredictionHistory from "../components/PredictionHistory";
+import { useSessionUuid } from "../hooks/useSessionUuid";
+import Sidebar from "../../components/Sidebar";
+import ClinicalTriage from "../../components/ClinicalTriage";
+import LaboratoryAnalysis from "../../components/LaboratoryAnalysis";
+import PredictionHistory from "../../components/PredictionHistory";
 import { Menu, X, ShieldAlert } from "lucide-react";
 
 const SYMPTOM_MAP: Record<string, string> = {

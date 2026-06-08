@@ -2,18 +2,24 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, X, Activity, RotateCcw, Loader2 } from 'lucide-react';
 
 const BOX_1_OPTIONS = [
-  "High Fever", "Chills", "Fatigue", "Malaise", "Headache", 
-  "Sweating (Normal)", "Profuse Sweating", "Saddleback Fever", "Step-Ladder Fever", 
-  "Toxic Look (Typhos)", "Joint Pain", "Muscle Pain", "Back Pain", 
-  "Pain Behind the Eyes", "Dry Cough", "Dehydration"
+  "Fatigue", "Malaise", "Headache", "Joint Pain", "Muscle Pain", 
+  "Back Pain", "Pain Behind the Eyes", "Dry Cough", "Dehydration", "Toxic Look (Typhos)"
 ];
 
 const BOX_2_OPTIONS = [
+  "High Fever", "Chills", "Sweating (Normal)", "Profuse Sweating", 
+  "Saddleback Fever", "Step-Ladder Fever"
+];
+
+const BOX_3_OPTIONS = [
   "Abdominal / Belly Pain", "Constipation", "Diarrhoea", "Nausea", 
   "Vomiting (Occasional)", "Persistent Vomiting", "Severe Stomach Cramps", 
-  "Loss of Appetite", "Rapid Onset", "Skin Rash", "Bleeding Gums or Nosebleeds", 
-  "Blood Spots", "Red Spots Over Body", "Pink Spots", "Dark Urine", 
-  "Yellowing of Eyes / Mild Jaundice", "Sunken Eyes"
+  "Loss of Appetite", "Rapid Onset"
+];
+
+const BOX_4_OPTIONS = [
+  "Skin Rash", "Bleeding Gums or Nosebleeds", "Blood Spots", "Red Spots Over Body", 
+  "Pink Spots", "Dark Urine", "Yellowing of Eyes / Mild Jaundice", "Sunken Eyes"
 ];
 
 interface ClinicalTriageProps {
@@ -55,7 +61,7 @@ function MultiSelectDropdown({
   const availableOptions = options.filter(o => !selected.includes(o));
 
   return (
-    <div className="mb-6">
+    <div>
       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{label}</label>
       <div className="relative" ref={dropdownRef}>
         <div 
@@ -122,6 +128,8 @@ export default function ClinicalTriage({
 
   const box1Selected = selectedSymptoms.filter(s => BOX_1_OPTIONS.includes(s));
   const box2Selected = selectedSymptoms.filter(s => BOX_2_OPTIONS.includes(s));
+  const box3Selected = selectedSymptoms.filter(s => BOX_3_OPTIONS.includes(s));
+  const box4Selected = selectedSymptoms.filter(s => BOX_4_OPTIONS.includes(s));
 
   return (
     <div className="max-w-4xl w-full mx-auto animate-fade-in pb-12 transition-colors">
@@ -134,23 +142,41 @@ export default function ClinicalTriage({
       </div>
 
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 mb-8 transition-colors">
-        <MultiSelectDropdown 
-          label="General Body, Fever & Pain Symptoms"
-          options={BOX_1_OPTIONS}
-          selected={box1Selected}
-          toggleSymptom={toggleSymptom}
-          removeSymptom={removeSymptom}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <MultiSelectDropdown 
+            label="General Body & Pain Symptoms"
+            options={BOX_1_OPTIONS}
+            selected={box1Selected}
+            toggleSymptom={toggleSymptom}
+            removeSymptom={removeSymptom}
+          />
 
-        <MultiSelectDropdown 
-          label="Stomach, Digestion & Visual/Skin Indicators"
-          options={BOX_2_OPTIONS}
-          selected={box2Selected}
-          toggleSymptom={toggleSymptom}
-          removeSymptom={removeSymptom}
-        />
+          <MultiSelectDropdown 
+            label="Fever & Sweating Symptoms"
+            options={BOX_2_OPTIONS}
+            selected={box2Selected}
+            toggleSymptom={toggleSymptom}
+            removeSymptom={removeSymptom}
+          />
 
-        <div className="flex flex-col sm:flex-row gap-4 mt-6">
+          <MultiSelectDropdown 
+            label="Stomach & Digestion Symptoms"
+            options={BOX_3_OPTIONS}
+            selected={box3Selected}
+            toggleSymptom={toggleSymptom}
+            removeSymptom={removeSymptom}
+          />
+
+          <MultiSelectDropdown 
+            label="Skin, Bleeding & Visual Indicators"
+            options={BOX_4_OPTIONS}
+            selected={box4Selected}
+            toggleSymptom={toggleSymptom}
+            removeSymptom={removeSymptom}
+          />
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 mt-8">
           <button 
             onClick={handlePredictSymptoms}
             disabled={selectedSymptoms.length === 0 || isLoading}

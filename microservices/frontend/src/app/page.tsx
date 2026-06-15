@@ -153,7 +153,7 @@ export default function LandingPage() {
             <div className="grid md:grid-cols-3 gap-12 text-center">
               {[
                 { icon: FileText, title: "Step 1", desc: "Input Symptoms or Upload Slide." },
-                { icon: Activity, title: "Step 2", desc: "AI Processing (Naive Bayes & ONNX)." },
+                { icon: Activity, title: "Step 2", desc: "AI Processing (Naive Bayes & CNN)." },
                 { icon: CheckCircle2, title: "Step 3", desc: "Receive Diagnostic Confidence Score." }
               ].map((step, i) => (
                 <div key={i} className="flex flex-col items-center">

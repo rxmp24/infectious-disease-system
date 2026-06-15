@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { UploadCloud, Microscope, Trash2, AlertCircle, Camera, X, Loader2 } from 'lucide-react';
+import { UploadCloud, Microscope, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 
 interface LaboratoryAnalysisProps {
   file: File | null;
@@ -21,67 +21,7 @@ export default function LaboratoryAnalysis({
   isLoading
 }: LaboratoryAnalysisProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isWebcamOpen, setIsWebcamOpen] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isWebcamOpen && videoRef.current && streamRef.current) {
-      videoRef.current.srcObject = streamRef.current;
-    }
-  }, [isWebcamOpen]);
-
-  const startWebcam = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-      streamRef.current = stream;
-      setIsWebcamOpen(true);
-    } catch (err) {
-      console.error("Error accessing webcam: ", err);
-      // Fallback to hidden input if webcam fails
-      cameraInputRef.current?.click();
-    }
-  };
-
-  const stopWebcam = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    setIsWebcamOpen(false);
-  };
-
-  const capturePhoto = () => {
-    if (videoRef.current) {
-      const canvas = document.createElement("canvas");
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const file = new File([blob], "webcam-capture.jpg", { type: "image/jpeg" });
-            const event = {
-              target: { files: [file] }
-            } as unknown as React.ChangeEvent<HTMLInputElement>;
-            handleFileChange(event);
-            stopWebcam();
-          }
-        }, "image/jpeg");
-      }
-    }
-  };
 
   const onDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -132,14 +72,6 @@ export default function LaboratoryAnalysis({
               ref={fileInputRef}
               className="hidden" 
             />
-            <input 
-              type="file" 
-              accept="image/*" 
-              capture="environment"
-              onChange={handleFileChange} 
-              ref={cameraInputRef}
-              className="hidden" 
-            />
             <div className="bg-emerald-50 dark:bg-emerald-900/40 p-4 rounded-full mb-6">
               <UploadCloud className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
             </div>
@@ -152,13 +84,6 @@ export default function LaboratoryAnalysis({
               >
                 <UploadCloud className="w-5 h-5" />
                 Browse Files
-              </button>
-              <button 
-                onClick={startWebcam}
-                className="bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/40 dark:hover:bg-blue-800/60 text-blue-700 dark:text-blue-300 px-5 py-2.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 shadow-sm"
-              >
-                <Camera className="w-5 h-5" />
-                Take Photo
               </button>
             </div>
             
@@ -272,35 +197,6 @@ export default function LaboratoryAnalysis({
                 className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${isMalaria ? 'bg-red-500' : 'bg-emerald-500'}`} 
                 style={{ width: `${confidencePercent}%` }}
               ></div>
-            </div>
-          </div>
-        </div>
-      )}
-      {isWebcamOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 max-w-2xl w-full overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 transition-colors">
-              <h3 className="font-bold text-gray-900 dark:text-white">Take Blood Smear Photo</h3>
-              <button onClick={stopWebcam} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 bg-gray-200 dark:bg-gray-700 p-1.5 rounded-full transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="bg-black relative aspect-video flex items-center justify-center">
-              <video 
-                ref={videoRef} 
-                autoPlay 
-                playsInline 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="p-6 flex justify-center bg-gray-50 dark:bg-gray-800/50 transition-colors">
-              <button 
-                onClick={capturePhoto}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center gap-2"
-              >
-                <Camera className="w-5 h-5" />
-                Capture
-              </button>
             </div>
           </div>
         </div>

@@ -151,6 +151,9 @@ export default function Dashboard() {
         body: JSON.stringify({ features })
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to communicate with diagnostic service');
+      }
       setTriageResult(data);
       fetchHistory();
     } catch (e) {
@@ -196,6 +199,9 @@ export default function Dashboard() {
         body: formData
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to communicate with diagnostic service');
+      }
       setAnalysisResult(data);
       fetchHistory();
     } catch (e) {

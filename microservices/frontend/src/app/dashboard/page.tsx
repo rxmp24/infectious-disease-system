@@ -110,7 +110,12 @@ export default function Dashboard() {
   
   // Triage State
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
-  const [triageResult, setTriageResult] = useState<{ disease: string; confidence: number } | null>(null);
+  const [triageResult, setTriageResult] = useState<{ 
+    disease: string; 
+    confidence: number; 
+    differentials?: Array<{disease: string, confidence: number}>;
+    insufficient_data?: boolean;
+  } | null>(null);
 
   // Analysis State
   const [file, setFile] = useState<File | null>(null);

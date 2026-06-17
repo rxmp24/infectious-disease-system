@@ -33,11 +33,26 @@ async def predict_symptoms(payload: SymptomPayload):
         prediction = nb_model.predict(X)[0]
         probabilities = nb_model.predict_proba(X)[0]
         
-        # Get confidence probability
-        class_index = list(nb_model.classes_).index(prediction)
-        confidence = float(probabilities[class_index])
+        classes = nb_model.classes_
         
-        return {"disease": prediction, "confidence": confidence}
+        # Sort probabilities in descending order and get top 3
+        sorted_indices = np.argsort(probabilities)[::-1]
+        top_3_indices = sorted_indices[:3]
+        
+        differentials = [
+            {"disease": str(classes[i]), "confidence": float(probabilities[i])}
+            for i in top_3_indices
+        ]
+        
+        symptom_count = sum(payload.features)
+        insufficient_data = bool(symptom_count < 5)
+        
+        return {
+            "disease": differentials[0]["disease"],
+            "confidence": differentials[0]["confidence"],
+            "differentials": differentials,
+            "insufficient_data": insufficient_data
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -27,7 +27,12 @@ interface ClinicalTriageProps {
   toggleSymptom: (symptom: string) => void;
   removeSymptom: (symptom: string) => void;
   handlePredictSymptoms: () => void;
-  triageResult: { disease: string; confidence: number } | null;
+  triageResult: { 
+    disease: string; 
+    confidence: number;
+    differentials?: Array<{disease: string, confidence: number}>;
+    insufficient_data?: boolean;
+  } | null;
   clearTriage: () => void;
   isLoading: boolean;
 }
@@ -226,6 +231,18 @@ export default function ClinicalTriage({
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 animate-fade-in relative overflow-hidden transition-colors">
           <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
           
+          {triageResult.insufficient_data && (
+            <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl flex items-start gap-3">
+              <div className="text-amber-600 dark:text-amber-500 mt-0.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-amber-800 dark:text-amber-400">Preliminary Assessment</h4>
+                <p className="text-sm text-amber-700 dark:text-amber-500 mt-1">Please select at least 5 symptoms for a high-confidence diagnosis.</p>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -259,6 +276,28 @@ export default function ClinicalTriage({
               ></div>
             </div>
           </div>
+
+          {triageResult.differentials && triageResult.differentials.length > 1 && (
+            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-4">Differential Diagnoses</h4>
+              <div className="space-y-4">
+                {triageResult.differentials.slice(1).map((diff) => (
+                  <div key={diff.disease}>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{diff.disease}</span>
+                      <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{(diff.confidence * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1.5">
+                      <div 
+                        className="bg-gray-400 dark:bg-gray-500 h-1.5 rounded-full transition-all duration-1000 ease-out" 
+                        style={{ width: `${diff.confidence * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
